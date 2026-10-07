@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - GEOAPI_DATABASE_URL=sqlite:////data/geo_files.db
+      - GEOAPI_LOG_LEVEL=INFO
+    volumes:
+      - geo_data:/data
+    # To use Postgres instead, uncomment below and the `db` service:
+    # environment:
+    #   - GEOAPI_DATABASE_URL=postgresql://geo:geo@db:5432/geo
+    # depends_on:
+    #   - db
+
+  # db:
+  #   image: postgis/postgis:16-3.4
+  #   environment:
+  #     - POSTGRES_USER=geo
+  #     - POSTGRES_PASSWORD=geo
+  #     - POSTGRES_DB=geo
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - pg_data:/var/lib/postgresql/data
+
+volumes:
+  geo_data:
+  # pg_data:
