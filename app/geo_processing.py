@@ -69,10 +69,9 @@ def load_vector_file(file_path: str, filename: str) -> gpd.GeoDataFrame:
             # geopandas can read directly from a zip using the "zip://" prefix
             gdf = gpd.read_file(f"zip://{file_path}")
         elif lower.endswith(".kml"):
-            # KML driver needs to be enabled explicitly in some fiona builds
-            import fiona
-            fiona.drvsupport.supported_drivers["KML"] = "rw"
-            gdf = gpd.read_file(file_path, driver="KML")
+            # pyogrio (geopandas>=1.0 default engine) reads KML natively;
+            # pass engine="pyogrio" explicitly to bypass any legacy fiona path
+            gdf = gpd.read_file(file_path, driver="KML", engine="pyogrio")
         else:
             raise GeoProcessingError(
                 "Unsupported file type. Only .zip (Shapefile) and .kml are supported."
@@ -80,7 +79,7 @@ def load_vector_file(file_path: str, filename: str) -> gpd.GeoDataFrame:
     except GeoProcessingError:
         raise
     except Exception as exc:
-        # Wrap raw GDAL/Fiona exceptions with a clean, user-facing message
+        # Wrap raw GDAL/pyogrio exceptions with a clean, user-facing message
         raise GeoProcessingError(f"Failed to read geospatial file: {exc}") from exc
 
     if gdf.empty:

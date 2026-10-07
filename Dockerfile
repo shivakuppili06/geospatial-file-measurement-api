@@ -1,13 +1,12 @@
 FROM python:3.11-slim
 
-# GDAL system deps required by fiona/geopandas
+# pyogrio bundles GDAL via wheels for local dev; system GDAL still
+# useful inside Docker for pyogrio's runtime and GDAL CLI tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gdal-bin \
     libgdal-dev \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
-
-ENV GDAL_VERSION=3.6.2
 
 WORKDIR /app
 

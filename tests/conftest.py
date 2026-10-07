@@ -21,9 +21,11 @@ def _setup_test_db():
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
+    engine.dispose()  # release connection-pool file lock before deletion (Windows)
     db_path = "./test_geo_files.db"
     if os.path.exists(db_path):
         os.remove(db_path)
+
 
 
 @pytest.fixture()

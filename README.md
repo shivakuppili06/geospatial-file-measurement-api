@@ -15,9 +15,12 @@ source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements-dev.txt   # includes test/lint tooling
 ```
 
-> Note: `fiona`/`geopandas` depend on GDAL. If installation fails on your OS,
-> install GDAL system libraries first (e.g. `apt install gdal-bin libgdal-dev`
-> on Ubuntu, or use `conda install -c conda-forge geopandas`).
+> **No system GDAL required.** The geospatial stack uses
+> [`pyogrio`](https://pyogrio.readthedocs.io/) as the I/O backend, which
+> ships its own bundled GDAL via pre-built wheels for Windows, macOS, and
+> Linux. `pip install -r requirements-dev.txt` is all you need — no
+> `apt install gdal-bin` or conda environment necessary for local development.
+> (Docker still installs system GDAL for its own runtime/CLI tooling.)
 
 ### Option B: Docker
 
